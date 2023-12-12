@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
+	"strings"
 )
 
 type launchableDir struct {
@@ -11,9 +14,8 @@ type launchableDir struct {
 
 func main() {
 	launchableDirs := getDirs()
-	for _, dir := range launchableDirs {
-		fmt.Println(dir.getFriendlyName())
-	}
+	selection := getSelectionFromFzf(launchableDirs)
+	fmt.Println("Selection", selection)
 }
 
 func getDirs() []launchableDir {
@@ -32,6 +34,25 @@ func getDirs() []launchableDir {
 		}
 	}
 	return launchableDirs
+}
+
+func getSelectionFromFzf(choices []launchableDir) string {
+	var input string
+	for _, choice := range choices {
+		input += choice.fullPath + "\n"
+	}
+	cmd := exec.Command("fzf")
+	cmd.Stdin = strings.NewReader(input)
+	var stdout bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("Error:", err)
+		os.Exit(1)
+	}
+	return strings.TrimSpace(stdout.String())
 }
 
 func (l launchableDir) getFriendlyName() string {
