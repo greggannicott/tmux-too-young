@@ -41,7 +41,7 @@ func getSelectionFromFzf(choices []launchableDir) string {
 	for _, choice := range choices {
 		input += choice.fullPath + "\n"
 	}
-	cmd := exec.Command("fzf")
+	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a repo to open in tmux:")
 	cmd.Stdin = strings.NewReader(input)
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
