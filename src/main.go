@@ -12,14 +12,19 @@ type projectDirectory struct {
 	fullPath string
 }
 
+var projectDirectories []projectDirectory
+
 func main() {
-	projectDirectory := getDirectories()
-	selectedProject := getSelectionFromFzf(projectDirectory)
-	fmt.Println("Selection", selectedProject)
+	getProjectDirectories()
+	projectDirectory := getSelectionFromFzf()
+	if isInsideOfTmux() {
+		openProjectFromWithinTmux(projectDirectory)
+	} else {
+		fmt.Println("Unable to open session as we are not inside of Tmux...")
+	}
 }
 
-func getDirectories() []projectDirectory {
-	launchableDirs := []projectDirectory{}
+func getProjectDirectories() {
 	// The following is hard coded but eventually will be obtained via a loop over a config entry.
 	currentDir := "/Users/greggannicott/code/"
 	dirs, _ := os.ReadDir(currentDir)
@@ -30,15 +35,14 @@ func getDirectories() []projectDirectory {
 			launchableDir := projectDirectory{
 				fullPath: fullPath,
 			}
-			launchableDirs = append(launchableDirs, launchableDir)
+			projectDirectories = append(projectDirectories, launchableDir)
 		}
 	}
-	return launchableDirs
 }
 
-func getSelectionFromFzf(choices []projectDirectory) string {
+func getSelectionFromFzf() projectDirectory {
 	var input string
-	for _, choice := range choices {
+	for _, choice := range projectDirectories {
 		input += choice.fullPath + "\n"
 	}
 	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a Project to open in tmux:")
@@ -52,9 +56,45 @@ func getSelectionFromFzf(choices []projectDirectory) string {
 		fmt.Println("Error:", err)
 		os.Exit(1)
 	}
-	return strings.TrimSpace(stdout.String())
+	selectedProjectName := strings.TrimSpace(stdout.String())
+	return findProjectDirectoryByFriendlyName(selectedProjectName)
+}
+
+func openProjectFromWithinTmux(projectDirectory projectDirectory) {
+	newSessionCmd := exec.Command("tmux", "new-session", "-d", "-s", projectDirectory.getSessionName(), "-c", "/users/greggannicott/code/tmux-too-young")
+	err := newSessionCmd.Start()
+	if err != nil {
+		fmt.Println("Error creating new tmux session:", err)
+	}
+
+	switchSessionCmd := exec.Command("tmux", "switch-client", "-t", projectDirectory.getSessionName())
+	switchSessionCmdErr := switchSessionCmd.Start()
+	if switchSessionCmdErr != nil {
+		fmt.Println("Error switching to new session:", err)
+	}
+}
+
+func findProjectDirectoryByFriendlyName(name string) projectDirectory {
+	var matchingProjectDirectory projectDirectory
+	for _, projectDirectory := range projectDirectories {
+		if projectDirectory.getFriendlyName() == name {
+			matchingProjectDirectory = projectDirectory
+			break
+		}
+	}
+	return matchingProjectDirectory
+}
+
+func isInsideOfTmux() bool {
+	_, isInsideOfTmux := os.LookupEnv("TMUX")
+	return isInsideOfTmux
 }
 
 func (l projectDirectory) getFriendlyName() string {
 	return l.fullPath
+}
+
+func (p projectDirectory) getSessionName() string {
+	fileInfo, _ := os.Stat(p.fullPath)
+	return fileInfo.Name()
 }
