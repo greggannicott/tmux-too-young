@@ -8,18 +8,18 @@ import (
 	"strings"
 )
 
-type launchableDir struct {
+type projectDirectory struct {
 	fullPath string
 }
 
 func main() {
-	launchableDirs := getDirs()
-	selection := getSelectionFromFzf(launchableDirs)
-	fmt.Println("Selection", selection)
+	projectDirectory := getDirectories()
+	selectedProject := getSelectionFromFzf(projectDirectory)
+	fmt.Println("Selection", selectedProject)
 }
 
-func getDirs() []launchableDir {
-	launchableDirs := []launchableDir{}
+func getDirectories() []projectDirectory {
+	launchableDirs := []projectDirectory{}
 	// The following is hard coded but eventually will be obtained via a loop over a config entry.
 	currentDir := "/Users/greggannicott/code/"
 	dirs, _ := os.ReadDir(currentDir)
@@ -27,7 +27,7 @@ func getDirs() []launchableDir {
 		fullPath := currentDir + dir.Name()
 		_, err := os.Stat(fullPath + "/.git/")
 		if err == nil {
-			launchableDir := launchableDir{
+			launchableDir := projectDirectory{
 				fullPath: fullPath,
 			}
 			launchableDirs = append(launchableDirs, launchableDir)
@@ -36,12 +36,12 @@ func getDirs() []launchableDir {
 	return launchableDirs
 }
 
-func getSelectionFromFzf(choices []launchableDir) string {
+func getSelectionFromFzf(choices []projectDirectory) string {
 	var input string
 	for _, choice := range choices {
 		input += choice.fullPath + "\n"
 	}
-	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a repo to open in tmux:")
+	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a Project to open in tmux:")
 	cmd.Stdin = strings.NewReader(input)
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
@@ -55,6 +55,6 @@ func getSelectionFromFzf(choices []launchableDir) string {
 	return strings.TrimSpace(stdout.String())
 }
 
-func (l launchableDir) getFriendlyName() string {
+func (l projectDirectory) getFriendlyName() string {
 	return l.fullPath
 }
