@@ -18,7 +18,11 @@ func main() {
 	getProjectDirectories()
 	projectDirectory := getSelectionFromFzf()
 	if isInsideOfTmux() {
-		openProjectFromWithinTmux(projectDirectory)
+		if sessionIsUnderway(projectDirectory) {
+			attachToProjectFromWithinTmux(projectDirectory)
+		} else {
+			openProjectFromWithinTmux(projectDirectory)
+		}
 	} else {
 		fmt.Println("Unable to open session as we are not inside of Tmux...")
 	}
@@ -66,11 +70,14 @@ func openProjectFromWithinTmux(projectDirectory projectDirectory) {
 	if err != nil {
 		fmt.Println("Error creating new tmux session:", err)
 	}
+	attachToProjectFromWithinTmux(projectDirectory)
+}
 
+func attachToProjectFromWithinTmux(projectDirectory projectDirectory) {
 	switchSessionCmd := exec.Command("tmux", "switch-client", "-t", projectDirectory.getSessionName())
 	switchSessionCmdErr := switchSessionCmd.Start()
 	if switchSessionCmdErr != nil {
-		fmt.Println("Error switching to new session:", err)
+		fmt.Println("Error switching to new session:", switchSessionCmdErr)
 	}
 }
 
@@ -83,6 +90,12 @@ func findProjectDirectoryByFriendlyName(name string) projectDirectory {
 		}
 	}
 	return matchingProjectDirectory
+}
+
+func sessionIsUnderway(projectDirectory projectDirectory) bool {
+	sessionIsUserwayCmd := exec.Command("/bin/zsh", "-c", "tmux list-sessions | cut -d ':' -f 1 | grep "+projectDirectory.getSessionName())
+	output, _ := sessionIsUserwayCmd.Output()
+	return string(output) != ""
 }
 
 func isInsideOfTmux() bool {
