@@ -24,7 +24,12 @@ func main() {
 			openProjectFromWithinTmux(project)
 		}
 	} else {
-		fmt.Println("Unable to open session as we are not inside of Tmux...")
+		if sessionIsUnderway(project) {
+			fmt.Println("Session is underway. Attaching...")
+			attachToProjectFromOutsideOfTmux(project)
+		} else {
+			fmt.Println("Session is not underway. Creating...")
+		}
 	}
 }
 
@@ -75,9 +80,20 @@ func openProjectFromWithinTmux(p project) {
 
 func attachToProjectFromWithinTmux(p project) {
 	switchSessionCmd := exec.Command("tmux", "switch-client", "-t", p.getSessionName())
-	switchSessionCmdErr := switchSessionCmd.Start()
-	if switchSessionCmdErr != nil {
-		fmt.Println("Error switching to new session:", switchSessionCmdErr)
+	err := switchSessionCmd.Start()
+	if err != nil {
+		fmt.Println("Error switching to session:", err)
+	}
+}
+
+func attachToProjectFromOutsideOfTmux(p project) {
+	attachSessionCmd := exec.Command("tmux", "attach-session", "-t", p.getSessionName())
+	attachSessionCmd.Stdin = os.Stdin
+	attachSessionCmd.Stdout = os.Stdout
+	attachSessionCmd.Stderr = os.Stderr
+	err := attachSessionCmd.Run()
+	if err != nil {
+		fmt.Println("Error attaching to exiting session:", err)
 	}
 }
 
