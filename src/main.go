@@ -190,7 +190,7 @@ func findProjectDirectoryByFriendlyName(name string) project {
 }
 
 func sessionIsUnderway(p project) bool {
-	sessionIsUserwayCmd := exec.Command("/bin/zsh", "-c", "tmux list-sessions | cut -d ':' -f 1 | grep "+p.getSessionName())
+	sessionIsUserwayCmd := exec.Command("/bin/zsh", "-c", "tmux list-sessions | cut -d ':' -f 1 | grep '"+p.getSessionName()+"'")
 	output, _ := sessionIsUserwayCmd.Output()
 	return string(output) != ""
 }
