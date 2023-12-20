@@ -10,10 +10,11 @@ import (
 )
 
 type project struct {
-	basePath   string
-	fullPath   string
-	isWorktree bool
-	branch     string
+	basePath      string
+	fullPath      string
+	isWorktree    bool
+	branch        string
+	supportsTmuxp bool
 }
 type worktreeDetails struct {
 	worktree string
@@ -25,17 +26,21 @@ var projects []project
 func main() {
 	getProjectDirectories()
 	project := getSelectionFromFzf()
-	if isInsideOfTmux() {
-		if sessionIsUnderway(project) {
-			attachToProjectFromWithinTmux(project)
-		} else {
-			openProjectFromWithinTmux(project)
-		}
+	if project.supportsTmuxp == true {
+		openProjectUsingTmuxp(project)
 	} else {
-		if sessionIsUnderway(project) {
-			attachToProjectFromOutsideOfTmux(project)
+		if isInsideOfTmux() {
+			if sessionIsUnderway(project) {
+				attachToProjectFromWithinTmux(project)
+			} else {
+				openProjectFromWithinTmux(project)
+			}
 		} else {
-			openProjectFromOutsideOfTmux(project)
+			if sessionIsUnderway(project) {
+				attachToProjectFromOutsideOfTmux(project)
+			} else {
+				openProjectFromOutsideOfTmux(project)
+			}
 		}
 	}
 }
@@ -52,20 +57,24 @@ func getProjectDirectories() {
 			// Find out if there are any worktrees in this directory
 			worktrees := getWorktrees(basePath)
 			if projectHasWorktrees(worktrees, basePath) {
+				projectHasTmuxpFile := projectHasTmuxpFile(basePath)
 				for _, w := range worktrees {
 					launchableDir := project{
-						basePath:   basePath,
-						fullPath:   basePath + "/" + w.branch,
-						isWorktree: true,
-						branch:     w.branch,
+						basePath:      basePath,
+						fullPath:      basePath + "/" + w.branch,
+						isWorktree:    true,
+						branch:        w.branch,
+						supportsTmuxp: projectHasTmuxpFile,
 					}
 					projects = append(projects, launchableDir)
 				}
 			} else {
+				projectHasTmuxpFile := projectHasTmuxpFile(basePath)
 				launchableDir := project{
-					basePath:   basePath,
-					fullPath:   basePath,
-					isWorktree: false,
+					basePath:      basePath,
+					fullPath:      basePath,
+					isWorktree:    false,
+					supportsTmuxp: projectHasTmuxpFile,
 				}
 				projects = append(projects, launchableDir)
 			}
@@ -119,6 +128,12 @@ func projectHasWorktrees(worktreeDetails []worktreeDetails, basePath string) boo
 	return worktreeDetails[0].worktree != basePath
 }
 
+func projectHasTmuxpFile(basePath string) bool {
+	tmuxpPath := basePath + "/.tmuxp.yaml"
+	_, err := os.Stat(tmuxpPath)
+	return err == nil
+}
+
 func getSelectionFromFzf() project {
 	var input string
 	for _, choice := range projects {
@@ -156,6 +171,17 @@ func openProjectFromOutsideOfTmux(p project) {
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Error creation new session:", err)
+	}
+}
+
+func openProjectUsingTmuxp(p project) {
+	cmd := exec.Command("tmuxp", "load", p.getTmuxpPath(), "-s", p.getSessionName(), "-y")
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("Error running tmuxp:", err)
 	}
 }
 
@@ -218,4 +244,7 @@ func (p project) getSessionName() string {
 	} else {
 		return safeName
 	}
+}
+func (p project) getTmuxpPath() string {
+	return p.basePath + "/.tmuxp.yaml"
 }
