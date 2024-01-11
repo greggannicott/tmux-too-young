@@ -109,6 +109,9 @@ func getWorktrees(basePath string) []worktreeDetails {
 }
 
 func projectHasWorktrees(worktreeDetails []worktreeDetails, basePath string) bool {
+	if len(worktreeDetails) == 0 {
+		return false
+	}
 	return worktreeDetails[0].worktree != basePath
 }
 
