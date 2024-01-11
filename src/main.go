@@ -17,34 +17,24 @@ type worktreeDetails struct {
 var projects []project
 
 // To run in terminal: go run tmux-too-young
+// Config file: ~/.ts.zsh
 func main() {
-	getProjectDirectories()
-	project := getSelectionFromFzf()
-	if project.supportsTmuxp == true {
-		openProjectUsingTmuxp(project)
-	} else {
-		if isInsideOfTmux() {
-			if sessionIsUnderway(project) {
-				attachToProjectFromWithinTmux(project)
-			} else {
-				openProjectFromWithinTmux(project)
-			}
-		} else {
-			if sessionIsUnderway(project) {
-				attachToProjectFromOutsideOfTmux(project)
-			} else {
-				openProjectFromOutsideOfTmux(project)
-			}
-		}
+	config := getConfig()
+	populateProjectDirectories(config)
+	selectedProject := getSelectionFromFzf()
+	openProject(selectedProject)
+}
+
+func populateProjectDirectories(config config) {
+	for i := 0; i < len(config.SearchDirectories); i++ {
+		populateProjectDirectoriesFor(config.SearchDirectories[i])
 	}
 }
 
-func getProjectDirectories() {
-	// The following is hard coded but eventually will be obtained via a loop over a config entry.
-	currentDir := "/Users/greggannicott/code/"
-	dirs, _ := os.ReadDir(currentDir)
+func populateProjectDirectoriesFor(rootDir string) {
+	dirs, _ := os.ReadDir(rootDir)
 	for _, dir := range dirs {
-		basePath := currentDir + dir.Name()
+		basePath := rootDir + dir.Name()
 		_, dirErr := os.Stat(basePath + "/.git/")
 		_, fileErr := os.Stat(basePath + "/.git")
 		if dirErr == nil || fileErr == nil {
@@ -146,6 +136,25 @@ func getSelectionFromFzf() project {
 	}
 	selectedProjectName := strings.TrimSpace(stdout.String())
 	return findProjectDirectoryByFriendlyName(selectedProjectName)
+}
+func openProject(selectedProject project) {
+	if selectedProject.supportsTmuxp == true {
+		openProjectUsingTmuxp(selectedProject)
+	} else {
+		if isInsideOfTmux() {
+			if sessionIsUnderway(selectedProject) {
+				attachToProjectFromWithinTmux(selectedProject)
+			} else {
+				openProjectFromWithinTmux(selectedProject)
+			}
+		} else {
+			if sessionIsUnderway(selectedProject) {
+				attachToProjectFromOutsideOfTmux(selectedProject)
+			} else {
+				openProjectFromOutsideOfTmux(selectedProject)
+			}
+		}
+	}
 }
 
 func openProjectFromWithinTmux(p project) {
