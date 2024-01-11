@@ -13,7 +13,7 @@ type config struct {
 
 func getConfig() config {
 	homeDir, _ := os.UserHomeDir()
-	contents, readFileErr := os.ReadFile(homeDir + "/.ts.yaml")
+	contents, readFileErr := os.ReadFile(homeDir + "/.tmux-too-young.yaml")
 	if readFileErr != nil {
 		fmt.Println("Failed to read config file:", readFileErr)
 		os.Exit(1)

@@ -17,7 +17,7 @@ type worktreeDetails struct {
 var projects []project
 
 // To run in terminal: go run tmux-too-young
-// Config file: ~/.ts.zsh
+// Config file: ~/.tmux-too-young.yaml
 func main() {
 	config := getConfig()
 	populateProjectDirectories(config)
