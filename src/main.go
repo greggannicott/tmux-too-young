@@ -19,10 +19,15 @@ var projects []project
 // To run in terminal: go run tmux-too-young
 // Config file: ~/.tmux-too-young.yaml
 func main() {
+	initialSearchTerm := getInitialSearchTerm()
 	config := getConfig()
 	populateProjectDirectories(config)
-	selectedProject := getSelectionFromFzf()
+	selectedProject := getSelectionFromFzf(initialSearchTerm)
 	openProject(selectedProject)
+}
+
+func getInitialSearchTerm() string {
+	return strings.Join(os.Args[1:], " ")
 }
 
 func populateProjectDirectories(config config) {
@@ -121,12 +126,12 @@ func projectHasTmuxpFile(basePath string) bool {
 	return err == nil
 }
 
-func getSelectionFromFzf() project {
+func getSelectionFromFzf(initialSearchTerm string) project {
 	var input string
 	for _, choice := range projects {
 		input += choice.getFriendlyName() + "\n"
 	}
-	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a Project to open in tmux:")
+	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a Project to open in tmux:", "--query="+initialSearchTerm)
 	cmd.Stdin = strings.NewReader(input)
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
