@@ -60,7 +60,7 @@ If the search term returns only one result, that session will be automattically 
 
 If we had a project called 'telescope' which supported worktrees, `tmux-too-young` would automattically create/attach to the session for the `main` branch.
 
-This is useful for a couple reasons:
+Being able to enter the search term when calling the app is useful for a couple reasons:
 
 1. Sometimes its just nice to write the search term whilst you are already in the act of writing the command.
 1. Doing so means it becomes part of your command history, meaning you can easily recall it using all the usual shell tricks.
