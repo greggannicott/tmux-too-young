@@ -131,7 +131,7 @@ func getSelectionFromFzf(initialSearchTerm string) project {
 	for _, choice := range projects {
 		input += choice.getFriendlyName() + "\n"
 	}
-	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a Project to open in tmux:", "--query="+initialSearchTerm)
+	cmd := exec.Command("fzf-tmux", "-p", "--cycle", "--reverse", "--border", "--info=inline-right", "--header=Select a Project to open in tmux:", "--query="+initialSearchTerm, "-1")
 	cmd.Stdin = strings.NewReader(input)
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
