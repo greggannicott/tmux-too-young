@@ -4,7 +4,7 @@
 
 `tmux-too-young` is tmux session opener which includes features for git, git worktrees and [tmuxp](https://github.com/tmux-python/tmuxp).
 
-It makes it effortless to launch and switch between tmux sessions when your projects contain a git repo.
+It makes effortless work of launching and switching between tmux sessions when your projects contain a git repo.
 
 If your git repo uses git worktrees then each individual worktree is offered as a different session.
 
@@ -33,7 +33,7 @@ Each session represents either:
 | A git repo  | The name of the root directory | `tmux-too-young` |
 | A git worktree within a repo (if the repo supports worktrees) | The name of the root directory followed by name of branch | `tmux-too-young -> main` |
 
-You can enter a search term to filter the list of potential sessions, and navigate to select one.
+As [fzf](https://github.com/junegunn/fzf) is used to display the results, you can enter a search term to filter the list of potential sessions, and navigate to select one.
 
 ### What happens when I select an item?
 
@@ -48,9 +48,17 @@ Including a `.tmuxp.yaml` file in your repo and lauching it via `tmux-too-young`
 
 ### Can I pass in a search term via the command line?
 
-Yes. You can pass an argument to `tmux-too-young`. This string will be used as your initial search term.
+Yes. You can pass an argument to `tmux-too-young`. For example:
+
+```bash
+./tmux-too-young telescope main
+```
+
+The string "telescope main" will be used as your initial search term, with results being filtered by that term.
 
 If the search term returns only one result, that session will be automattically created/attached to.
+
+If we had a project called 'telescope' which supported worktrees, `tmux-too-young` would automattically create/attach to the session for the `main` branch.
 
 This is useful for a couple reasons:
 
