@@ -33,5 +33,9 @@ func (p project) getSessionName() string {
 	}
 }
 func (p project) getTmuxpPath() string {
-	return p.basePath + "/.tmuxp.yaml"
+	if p.isWorktree {
+		return p.fullPath + "/.tmuxp.yaml"
+	} else {
+		return p.basePath + "/.tmuxp.yaml"
+	}
 }

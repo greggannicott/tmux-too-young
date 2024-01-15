@@ -46,8 +46,8 @@ func populateProjectDirectoriesFor(rootDir string) {
 			// Find out if there are any worktrees in this directory
 			worktrees := getWorktrees(basePath)
 			if projectHasWorktrees(worktrees, basePath) {
-				projectHasTmuxpFile := projectHasTmuxpFile(basePath)
 				for _, w := range worktrees {
+					projectHasTmuxpFile := projectHasTmuxpFile(basePath + "/" + w.branch)
 					launchableDir := project{
 						basePath:      basePath,
 						fullPath:      basePath + "/" + w.branch,
