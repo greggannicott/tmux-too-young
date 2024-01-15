@@ -139,8 +139,13 @@ func getSelectionFromFzf(initialSearchTerm string) project {
 
 	err := cmd.Run()
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		// If it exited with code 130, then the user pressed Ctrl-C and we don't want to show an error
+		if err.Error() == "exit status 130" {
+			os.Exit(0)
+		} else {
+			fmt.Println("Error:", err)
+			os.Exit(1)
+		}
 	}
 	selectedProjectName := strings.TrimSpace(stdout.String())
 	return findProjectDirectoryByFriendlyName(selectedProjectName)
