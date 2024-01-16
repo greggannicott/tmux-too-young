@@ -73,10 +73,21 @@ func populateProjectDirectoriesFor(rootDir string) {
 }
 
 func prepareRootDir(rd string) string {
-	if !strings.HasSuffix(rd, string(os.PathSeparator)) {
-		rd = rd + string(os.PathSeparator)
-	}
+	rd = addTrailigSlash(rd)
+	rd = replaceTildeWithHomeDirectory(rd)
 	return rd
+}
+
+func addTrailigSlash(s string) string {
+	if !strings.HasSuffix(s, string(os.PathSeparator)) {
+		s = s + string(os.PathSeparator)
+	}
+	return s
+}
+
+func replaceTildeWithHomeDirectory(s string) string {
+	userHomeDir, _ := os.UserHomeDir()
+	return strings.Replace(s, "~", userHomeDir, 1)
 }
 
 func getWorktrees(basePath string) []worktreeDetails {
