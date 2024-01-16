@@ -37,6 +37,7 @@ func populateProjectDirectories(config config) {
 }
 
 func populateProjectDirectoriesFor(rootDir string) {
+	rootDir = prepareRootDir(rootDir)
 	dirs, _ := os.ReadDir(rootDir)
 	for _, dir := range dirs {
 		basePath := rootDir + dir.Name()
@@ -69,6 +70,13 @@ func populateProjectDirectoriesFor(rootDir string) {
 			}
 		}
 	}
+}
+
+func prepareRootDir(rd string) string {
+	if !strings.HasSuffix(rd, string(os.PathSeparator)) {
+		rd = rd + string(os.PathSeparator)
+	}
+	return rd
 }
 
 func getWorktrees(basePath string) []worktreeDetails {
