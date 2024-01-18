@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func getSelectionFromFzf(initialSearchTerm string) project {
+func getSelectionFromUser(initialSearchTerm string) project {
 	var input string
 	for _, choice := range projects {
 		input += choice.getFriendlyName() + "\n"
