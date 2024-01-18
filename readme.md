@@ -4,7 +4,7 @@
 
 `tmux-too-young` is tmux session opener which includes features for git, git worktrees and [tmuxp](https://github.com/tmux-python/tmuxp).
 
-It makes effortless work of launching and switching between tmux sessions when your projects contain a git repo.
+It makes effortless work of launching and switching between tmux sessions when your projects contain a git repo or a `.tmuxp.yaml` file.
 
 If your git repo uses git worktrees then each individual worktree is offered as a different session.
 
@@ -30,8 +30,9 @@ Each session represents either:
 
 | Item | Displayed | Example |
 |-------------|-----------|---------|
-| A git repo  | The name of the root directory | `tmux-too-young` |
-| A git worktree within a repo (if the repo supports worktrees) | The name of the root directory followed by name of branch | `tmux-too-young -> main` |
+| A git repo  | The name of the root directory | `my-project` |
+| A git worktree within a repo (if the repo supports worktrees) | The name of the root directory followed by name of branch | `my-project -> my-branch` |
+| A directory containing a `.tmuxp.yaml` file | The name of the root directory | `my-project` |
 
 As [fzf](https://github.com/junegunn/fzf) is used to display the results, you can enter a search term to filter the list of potential sessions, and navigate to select one.
 
@@ -42,7 +43,7 @@ As [fzf](https://github.com/junegunn/fzf) is used to display the results, you ca
 
 ### The intro mentions `tmuxp` support.....?
 
-Yes, as a bonus if a `.tmuxp.yaml` file exists in the root, `tmuxp` will be used to launch the session, meaning your tmuxp session file will be used to determine its windows, panels etc.
+Yes, not only does it detect directories with `.tmuxp.yaml` files, but as a bonus if a `.tmuxp.yaml` file exists in the root, `tmuxp` will be used to launch the session, meaning your tmuxp session file will be used to determine its windows, panels etc.
 
 Including a `.tmuxp.yaml` file in your repo and lauching it via `tmux-too-young` makes for a fantastic dev experience. Recommended!
 

@@ -18,9 +18,10 @@ func scanProjectDirectoriesFor(rootDir string) {
 	dirs, _ := os.ReadDir(rootDir)
 	for _, dir := range dirs {
 		basePath := rootDir + dir.Name()
-		_, dirErr := os.Stat(basePath + "/.git/")
-		_, fileErr := os.Stat(basePath + "/.git")
-		if dirErr == nil || fileErr == nil {
+		_, gitDirErr := os.Stat(basePath + "/.git/")
+		_, gitFileErr := os.Stat(basePath + "/.git")
+		_, tmuxpFileErr := os.Stat(basePath + "/.tmuxp.yaml")
+		if gitDirErr == nil || gitFileErr == nil || tmuxpFileErr == nil {
 			// Find out if there are any worktrees in this directory
 			worktrees := getWorktreesForProject(basePath)
 			if projectHasWorktrees(worktrees, basePath) {
