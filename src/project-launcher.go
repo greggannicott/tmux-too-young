@@ -49,7 +49,6 @@ func launchProjectFromOutsideOfTmux(p project) {
 func launchProjectUsingTmuxp(p project) {
 	cmd := exec.Command("tmuxp", "load", p.getTmuxpPath(), "-s", p.getSessionName(), "-y")
 	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
 	if err != nil {

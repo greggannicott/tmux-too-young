@@ -14,6 +14,7 @@ func scanProjectDirectories(config config) {
 }
 
 func scanProjectDirectoriesFor(rootDir string) {
+	rootDir = prepareRootDir(rootDir)
 	dirs, _ := os.ReadDir(rootDir)
 	for _, dir := range dirs {
 		basePath := rootDir + dir.Name()
@@ -46,6 +47,24 @@ func scanProjectDirectoriesFor(rootDir string) {
 			}
 		}
 	}
+}
+
+func prepareRootDir(rd string) string {
+	rd = addTrailigSlash(rd)
+	rd = replaceTildeWithHomeDirectory(rd)
+	return rd
+}
+
+func addTrailigSlash(s string) string {
+	if !strings.HasSuffix(s, string(os.PathSeparator)) {
+		s = s + string(os.PathSeparator)
+	}
+	return s
+}
+
+func replaceTildeWithHomeDirectory(s string) string {
+	userHomeDir, _ := os.UserHomeDir()
+	return strings.Replace(s, "~", userHomeDir, 1)
 }
 
 func getWorktreesForProject(basePath string) []worktreeDetails {
