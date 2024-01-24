@@ -88,7 +88,8 @@ func getWorktreesForProject(basePath string) []worktreeDetails {
 				continue
 			}
 			key := keyValue[0]
-			value := keyValue[1]
+			// Capture everything following the first space (including other spaces)
+			value := strings.Join(keyValue[1:], " ")
 			if key == "worktree" {
 				worktree.worktree = value
 			} else if key == "branch" {
