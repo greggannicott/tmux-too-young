@@ -8,6 +8,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+var Version = "Development"
+
 type worktreeDetails struct {
 	worktree string
 	branch   string
@@ -22,6 +24,7 @@ func main() {
 		Name:            "tmux-too-young",
 		Usage:           "The Very Special tmux Session Opener...",
 		HideHelpCommand: true,
+		Version:         Version,
 		Action: func(*cli.Context) error {
 			initialSearchTerm := getInitialSearchTerm()
 			config := getConfig()
