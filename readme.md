@@ -99,6 +99,7 @@ Update the tag with the new version (following sematic version rules):
 
 ```bash
 git tag v0.0.1
+git push --tags
 ```
 
 #### Generate the Build
