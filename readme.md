@@ -87,7 +87,25 @@ Note, this will change once you formalise things.
 
 For the time being, this is how you get it into the bin directory so you can use it personally across your machines.
 
+#### Update Git Tag
+
+Determine the latest version:
+
+```bash
+git tag --sort=-version:refname | head -n 1
 ```
-go build tmux-too-young
+
+Update the tag with the new version (following sematic version rules):
+
+```bash
+git tag v0.0.1
+```
+
+#### Generate the Build
+
+Generate the build, setting the version number using the latest tag and move it into the bin directory.
+
+```bash
+go build -ldflags "-X main.Version=`git tag --sort=-version:refname | head -n 1`"
 mv tmux-too-young ~/dotfiles/bin/bin/
 ```
