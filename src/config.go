@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -25,4 +26,18 @@ func getConfig() config {
 		fmt.Println("Failed to parse config file:", parseYamlErr)
 	}
 	return config
+}
+
+func configExists() bool {
+	homeDir, _ := os.UserHomeDir()
+	_, err := os.Stat(homeDir + "/.tmux-too-young.yaml")
+	return err == nil
+}
+
+func createConfig(searchDirectoriesString string) {
+	searchDirectories := strings.Split(searchDirectoriesString, ",")
+	config := config{SearchDirectories: searchDirectories}
+	configAsString, _ := yaml.Marshal(config)
+	homeDir, _ := os.UserHomeDir()
+	os.WriteFile(homeDir+"/.tmux-too-young.yaml", configAsString, 0666)
 }

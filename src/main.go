@@ -26,6 +26,7 @@ func main() {
 		HideHelpCommand: true,
 		Version:         Version,
 		Action: func(*cli.Context) error {
+			ensureAppCanRun()
 			initialSearchTerm := getInitialSearchTerm()
 			config := getConfig()
 			scanProjectDirectories(config)
