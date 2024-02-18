@@ -1,5 +1,11 @@
 # tmux-too-young: The Very Special tmux Session Opener...
 
+## IMPORTANT
+
+This is still a work in progress with no official first version. Frankly I'm amazed you've found it!
+
+Use it at your own risk.
+
 ## About
 
 `tmux-too-young` is tmux session opener which includes features for git, git worktrees and [tmuxp](https://github.com/tmux-python/tmuxp).
@@ -9,6 +15,18 @@ It makes effortless work of launching and switching between tmux sessions when y
 If your git repo uses git worktrees then each individual worktree is offered as a different session.
 
 And, if your repo contains a `.tmuxp.yaml` file, tmuxp will be used to launch your session, meaning your tmuxp session file will be used to configure the windows and panels.
+
+## Installation
+
+### Homebrew
+
+```bash
+brew install greggannicott/tools/tmux-too-young
+```
+
+### Other
+
+Looking for an alternative way to install it? Please create an issue and we'll attempt to provide it.
 
 ## Usage
 
