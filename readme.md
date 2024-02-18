@@ -20,8 +20,17 @@ And, if your repo contains a `.tmuxp.yaml` file, tmuxp will be used to launch yo
 
 ### Homebrew
 
+Install with:
+
 ```bash
 brew install greggannicott/tools/tmux-too-young
+```
+
+Update to the latest version using:
+
+```bash
+brew update
+brew upgrade tmux-too-young
 ```
 
 ### Other
