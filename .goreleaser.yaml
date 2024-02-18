@@ -39,3 +39,10 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+brews:
+- name: tmux-too-young
+  homepage: https://github.com/greggannicott/tmux-too-young
+  tap:
+    owner: greggannicott
+    name: homebrew-tools
