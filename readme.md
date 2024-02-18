@@ -108,11 +108,15 @@ There are.
 go run tmux-too-young
 ```
 
-### "Deploying"
+### Releasing New Version
 
-Note, this will change once you formalise things.
+#### Push Changes
 
-For the time being, this is how you get it into the bin directory so you can use it personally across your machines.
+Make sure remote repo contains latest changes:
+
+```bash
+git push
+```
 
 #### Update Git Tag
 
@@ -126,14 +130,12 @@ Update the tag with the new version (following sematic version rules):
 
 ```bash
 git tag v0.0.1
-git push --tags
 ```
 
-#### Generate the Build
+#### Trigger New Release
 
-Generate the build, setting the version number using the latest tag and move it into the bin directory.
+Push your tags to trigger a new release on Github. This will build the new binaries and update theHomebrew repo using a combination of Goreleaser and Github Actions:
 
 ```bash
-go build -ldflags "-X main.Version=`git tag --sort=-version:refname | head -n 1`"
-mv tmux-too-young ~/dotfiles/bin/bin/
+git push --tags
 ```
