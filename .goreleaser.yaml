@@ -44,6 +44,6 @@ changelog:
 brews:
 - name: tmux-too-young
   homepage: https://github.com/greggannicott/tmux-too-young
-  tap:
+  repository:
     owner: greggannicott
     name: homebrew-tools
