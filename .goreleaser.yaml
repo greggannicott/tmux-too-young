@@ -39,6 +39,7 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+      - "^ci:"
 
 brews:
 - name: tmux-too-young
