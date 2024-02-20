@@ -41,17 +41,17 @@ Looking for an alternative way to install it? Please create an issue and we'll a
 
 ### How do I run it?
 
-To open `tmux-too-young`, run:
+To open a tmux session with `tmux-too-young`, run:
 
 ```bash
-./tmux-too-young
+./tmux-too-young open
 ```
 
 See 'Are there any tips in terms of integrating it into my workflow?' below for tips on making it less of a verbose pain to run.
 
 ### What gets listed?
 
-Having run `tmux-too-young`, you are presented with a list of potential sessions. Some may already exist, some may not.
+Having run `tmux-too-young open`, you are presented with a list of potential sessions. Some may already exist, some may not.
 
 Each session represents either:
 
@@ -76,10 +76,10 @@ Including a `.tmuxp.yaml` file in your repo and lauching it via `tmux-too-young`
 
 ### Can I pass in a search term via the command line?
 
-Yes. You can pass an argument to `tmux-too-young`. For example:
+Yes. You can pass a value to `tmux-too-young`. For example:
 
 ```bash
-./tmux-too-young telescope main
+./tmux-too-young open --search "telescope main"
 ```
 
 The string "telescope main" will be used as your initial search term, with results being filtered by that term.
@@ -105,7 +105,7 @@ There are.
 ### Running
 
 ```
-go run tmux-too-young
+go run tmux-too-young open
 ```
 
 ### Releasing New Version
