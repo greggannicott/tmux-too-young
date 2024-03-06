@@ -60,6 +60,7 @@ Each session represents either:
 | A git repo  | The name of the root directory | `my-project` |
 | A git worktree within a repo (if the repo supports worktrees) | The name of the root directory followed by name of branch | `my-project -> my-branch` |
 | A directory containing a `.tmuxp.yaml` file | The name of the root directory | `my-project` |
+| A directory containing an empty `.tmux-too-young` file | The name of the root directory | `my-project` |
 
 As [fzf](https://github.com/junegunn/fzf) is used to display the results, you can enter a search term to filter the list of potential sessions, and navigate to select one.
 
