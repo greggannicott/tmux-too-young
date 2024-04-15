@@ -37,6 +37,14 @@ brew upgrade tmux-too-young
 
 Looking for an alternative way to install it? Please create an issue and we'll attempt to provide it.
 
+## Setup
+
+The first time you run `tmux-too-young open`, you will be prompted to enter the directories you want it to scan for projects (ie. the directories/sessions that are listed).
+
+Enter a path, press enter and you will be prompted to enter another. Once you have finished entering your paths, provide an empty entry and it will proceed to display a list of projects.
+
+At this point your `~/.tmux-too-young.conf` file will be created.
+
 ## Usage
 
 ### How do I run it?
