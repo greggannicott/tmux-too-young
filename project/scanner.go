@@ -1,15 +1,16 @@
-package main
+package project
 
 import (
 	"os"
 	"os/exec"
 	"regexp"
 	"strings"
+	"tmux-too-young/config"
 )
 
-func scanProjectDirectories(config config) {
-	for i := 0; i < len(config.SearchDirectories); i++ {
-		scanProjectDirectoriesFor(config.SearchDirectories[i])
+func ScanProjectDirectories(c config.Configuration) {
+	for i := 0; i < len(c.SearchDirectories); i++ {
+		scanProjectDirectoriesFor(c.SearchDirectories[i])
 	}
 }
 

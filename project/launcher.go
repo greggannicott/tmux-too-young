@@ -1,4 +1,4 @@
-package main
+package project
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func launchProject(selectedProject project) {
+func LaunchProject(selectedProject project) {
 	if selectedProject.supportsTmuxp == true {
 		launchProjectUsingTmuxp(selectedProject)
 	} else {

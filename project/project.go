@@ -1,4 +1,4 @@
-package main
+package project
 
 import (
 	"os"
@@ -12,6 +12,13 @@ type project struct {
 	branch        string
 	supportsTmuxp bool
 }
+
+type worktreeDetails struct {
+	worktree string
+	branch   string
+}
+
+var projects []project
 
 func (l project) getFriendlyName() string {
 	if l.isWorktree {

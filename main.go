@@ -3,18 +3,14 @@ package main
 import (
 	"log"
 	"os"
+	config "tmux-too-young/config"
+	first_run "tmux-too-young/first-run"
+	project "tmux-too-young/project"
 
 	"github.com/urfave/cli/v2"
 )
 
 var Version = "Development"
-
-type worktreeDetails struct {
-	worktree string
-	branch   string
-}
-
-var projects []project
 
 // To run in terminal: go run tmux-too-young
 // Config file: ~/.tmux-too-young.yaml
@@ -38,11 +34,11 @@ func main() {
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
-					ensureAppCanRun()
-					config := getConfig()
-					scanProjectDirectories(config)
-					selectedProject := getSelectionFromUser(initialSearchTerm)
-					launchProject(selectedProject)
+					first_run.EnsureAppCanRun()
+					c := config.GetConfig()
+					project.ScanProjectDirectories(c)
+					selectedProject := project.GetSelectionFromUser(initialSearchTerm)
+					project.LaunchProject(selectedProject)
 					return nil
 				},
 			},

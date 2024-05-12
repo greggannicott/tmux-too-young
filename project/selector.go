@@ -1,4 +1,4 @@
-package main
+package project
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func getSelectionFromUser(initialSearchTerm string) project {
+func GetSelectionFromUser(initialSearchTerm string) project {
 	var input string
 	for _, choice := range projects {
 		input += choice.getFriendlyName() + "\n"

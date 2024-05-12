@@ -1,22 +1,23 @@
-package main
+package first_run
 
 import (
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+	"tmux-too-young/config"
 )
 
-func ensureAppCanRun() {
+func EnsureAppCanRun() {
 	if configNeedsCreating() {
 		sd := getSearchDirectoriesFromUser()
-		createConfig(sd)
+		config.CreateConfig(sd)
 		displayConfigInstructions(sd)
 	}
 }
 
 func configNeedsCreating() bool {
-	return !configExists()
+	return !config.ConfigExists()
 }
 
 func getSearchDirectoriesFromUser() []string {
