@@ -6,6 +6,7 @@ import (
 	config "tmux-too-young/config"
 	first_run "tmux-too-young/first-run"
 	project "tmux-too-young/project"
+	tui "tmux-too-young/tui"
 
 	"github.com/urfave/cli/v2"
 )
@@ -37,8 +38,9 @@ func main() {
 					first_run.EnsureAppCanRun()
 					c := config.GetConfig()
 					project.ScanProjectDirectories(c)
-					selectedProject := project.GetSelectionFromUser(initialSearchTerm)
-					project.LaunchProject(selectedProject)
+					tui.Display()
+					// selectedProject := project.GetSelectionFromUser(initialSearchTerm)
+					// project.LaunchProject(selectedProject)
 					return nil
 				},
 			},
