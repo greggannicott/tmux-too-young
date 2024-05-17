@@ -3,11 +3,37 @@ package tui
 import (
 	"fmt"
 
+	"github.com/charmbracelet/bubbles/help"
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 type model struct {
 	message string
+	keys    keyMap
+	help    help.Model
+}
+
+type keyMap struct {
+	Quit key.Binding
+}
+
+func (k keyMap) ShortHelp() []key.Binding {
+	return []key.Binding{k.Quit}
+}
+
+func (k keyMap) FullHelp() [][]key.Binding {
+	return [][]key.Binding{
+		{k.Quit},
+		{},
+	}
+}
+
+var DefaultKeyMap = keyMap{
+	Quit: key.NewBinding(
+		key.WithKeys("q", "ctrl+c"),
+		key.WithHelp("q", "quit"),
+	),
 }
 
 func Display() {
@@ -17,7 +43,11 @@ func Display() {
 	}
 }
 func initModel() tea.Model {
-	return model{}
+	return model{
+		message: "",
+		help:    help.New(),
+		keys:    DefaultKeyMap,
+	}
 }
 
 func (m model) Init() tea.Cmd {
@@ -27,8 +57,8 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.String() {
-		case "q", "ctrl+c":
+		switch {
+		case key.Matches(msg, DefaultKeyMap.Quit):
 			return m, tea.Quit
 		}
 	}
@@ -39,9 +69,6 @@ func (m model) View() string {
 	output := "\n"
 	output += "tmux-too-young...\n"
 	output += "\n"
-	output += "q to quit\n"
-	if len(m.message) > 0 {
-		output += m.message
-	}
+	output += m.help.View(m.keys)
 	return output
 }

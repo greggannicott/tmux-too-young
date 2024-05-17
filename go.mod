@@ -3,6 +3,7 @@ module tmux-too-young
 go 1.21.4
 
 require (
+	github.com/charmbracelet/bubbles v0.18.0
 	github.com/charmbracelet/bubbletea v0.26.2
 	github.com/urfave/cli/v2 v2.27.1
 	gopkg.in/yaml.v3 v3.0.1
@@ -10,6 +11,7 @@ require (
 
 require (
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
+	github.com/charmbracelet/lipgloss v0.9.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
