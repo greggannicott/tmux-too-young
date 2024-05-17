@@ -10,23 +10,26 @@ import (
 )
 
 type model struct {
-	message  string
-	keys     keyMap
-	help     help.Model
-	projects []projectModel
+	message     string
+	keys        keyMap
+	help        help.Model
+	projects    []projectModel
+	cursorIndex int
 }
 
 type keyMap struct {
 	Quit key.Binding
+	Up   key.Binding
+	Down key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Quit}
+	return []key.Binding{k.Up, k.Down, k.Quit}
 }
 
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Quit},
+		{k.Up, k.Down, k.Quit},
 		{},
 	}
 }
@@ -35,6 +38,14 @@ var DefaultKeyMap = keyMap{
 	Quit: key.NewBinding(
 		key.WithKeys("q", "ctrl+c"),
 		key.WithHelp("q", "quit"),
+	),
+	Up: key.NewBinding(
+		key.WithKeys("ctrl+k", "up"),
+		key.WithHelp("ctrl+k", "up"),
+	),
+	Down: key.NewBinding(
+		key.WithKeys("ctrl+j", "down"),
+		key.WithHelp("ctrl+j", "down"),
 	),
 }
 
@@ -60,6 +71,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch {
+		case key.Matches(msg, DefaultKeyMap.Up):
+			if m.cursorIndex == 0 {
+				m.cursorIndex = len(m.projects) - 1
+			} else {
+				m.cursorIndex--
+			}
+		case key.Matches(msg, DefaultKeyMap.Down):
+			if m.cursorIndex == len(m.projects)-1 {
+				m.cursorIndex = 0
+			} else {
+				m.cursorIndex++
+			}
 		case key.Matches(msg, DefaultKeyMap.Quit):
 			return m, tea.Quit
 		}
@@ -77,8 +100,12 @@ func (m model) View() string {
 	sb.WriteString("\n")
 	sb.WriteString("You've done too much... tmux-too-young...\n")
 	sb.WriteString("\n")
-	for _, p := range m.projects {
-		sb.WriteString(fmt.Sprintf("* %v\n", p.fullPath))
+	for i, p := range m.projects {
+		cursor := " "
+		if i == m.cursorIndex {
+			cursor = ">"
+		}
+		sb.WriteString(fmt.Sprintf("%v %v\n", cursor, p.fullPath))
 	}
 	sb.WriteString("\n")
 	sb.WriteString(m.help.View(m.keys))
