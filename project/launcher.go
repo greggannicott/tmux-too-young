@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func LaunchProject(selectedProject project) {
+func LaunchProject(selectedProject Project) {
 	if selectedProject.supportsTmuxp == true {
 		launchProjectUsingTmuxp(selectedProject)
 	} else {
@@ -26,8 +26,8 @@ func LaunchProject(selectedProject project) {
 	}
 }
 
-func launchProjectFromWithinTmux(p project) {
-	newSessionCmd := exec.Command("tmux", "new-session", "-d", "-s", p.getSessionName(), "-c", p.fullPath)
+func launchProjectFromWithinTmux(p Project) {
+	newSessionCmd := exec.Command("tmux", "new-session", "-d", "-s", p.getSessionName(), "-c", p.FullPath)
 	err := newSessionCmd.Start()
 	if err != nil {
 		fmt.Println("Error creating new tmux session:", err)
@@ -35,8 +35,8 @@ func launchProjectFromWithinTmux(p project) {
 	attachToProjectFromWithinTmux(p)
 }
 
-func launchProjectFromOutsideOfTmux(p project) {
-	cmd := exec.Command("tmux", "new-session", "-s", p.getSessionName(), "-c", p.fullPath)
+func launchProjectFromOutsideOfTmux(p Project) {
+	cmd := exec.Command("tmux", "new-session", "-s", p.getSessionName(), "-c", p.FullPath)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -46,7 +46,7 @@ func launchProjectFromOutsideOfTmux(p project) {
 	}
 }
 
-func launchProjectUsingTmuxp(p project) {
+func launchProjectUsingTmuxp(p Project) {
 	cmd := exec.Command("tmuxp", "load", p.getTmuxpPath(), "-s", p.getSessionName(), "-y")
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
@@ -56,7 +56,7 @@ func launchProjectUsingTmuxp(p project) {
 	}
 }
 
-func attachToProjectFromWithinTmux(p project) {
+func attachToProjectFromWithinTmux(p Project) {
 	cmd := exec.Command("tmux", "switch-client", "-t", p.getSessionName())
 	err := cmd.Start()
 	if err != nil {
@@ -64,7 +64,7 @@ func attachToProjectFromWithinTmux(p project) {
 	}
 }
 
-func attachToProjectFromOutsideOfTmux(p project) {
+func attachToProjectFromOutsideOfTmux(p Project) {
 	cmd := exec.Command("tmux", "attach-session", "-t", p.getSessionName())
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
@@ -75,7 +75,7 @@ func attachToProjectFromOutsideOfTmux(p project) {
 	}
 }
 
-func sessionIsUnderway(p project) bool {
+func sessionIsUnderway(p Project) bool {
 	sessionIsUserwayCmd := exec.Command("/bin/zsh", "-c", "tmux list-sessions | cut -d ':' -f 1 | grep '"+p.getSessionName()+"'")
 	output, _ := sessionIsUserwayCmd.Output()
 	return string(output) != ""

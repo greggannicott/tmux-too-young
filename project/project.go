@@ -5,9 +5,9 @@ import (
 	"strings"
 )
 
-type project struct {
+type Project struct {
 	basePath      string
-	fullPath      string
+	FullPath      string
 	isWorktree    bool
 	branch        string
 	supportsTmuxp bool
@@ -18,17 +18,17 @@ type worktreeDetails struct {
 	branch   string
 }
 
-var projects []project
+var projects []Project
 
-func (l project) getFriendlyName() string {
+func (l Project) getFriendlyName() string {
 	if l.isWorktree {
 		return l.basePath + " -> " + l.branch
 	} else {
-		return l.fullPath
+		return l.FullPath
 	}
 }
 
-func (p project) getSessionName() string {
+func (p Project) getSessionName() string {
 	fileInfo, _ := os.Stat(p.basePath)
 	// `.`s need to be replaced as they're not allowed in a tmux name
 	safeName := strings.ReplaceAll(fileInfo.Name(), ".", "_")
@@ -39,9 +39,9 @@ func (p project) getSessionName() string {
 		return safeName
 	}
 }
-func (p project) getTmuxpPath() string {
+func (p Project) getTmuxpPath() string {
 	if p.isWorktree {
-		return p.fullPath + "/.tmuxp.yaml"
+		return p.FullPath + "/.tmuxp.yaml"
 	} else {
 		return p.basePath + "/.tmuxp.yaml"
 	}

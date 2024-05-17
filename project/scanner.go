@@ -5,13 +5,13 @@ import (
 	"os/exec"
 	"regexp"
 	"strings"
-	"tmux-too-young/config"
 )
 
-func ScanProjectDirectories(c config.Configuration) {
-	for i := 0; i < len(c.SearchDirectories); i++ {
-		scanProjectDirectoriesFor(c.SearchDirectories[i])
+func ScanProjectDirectories(sd []string) []Project {
+	for i := 0; i < len(sd); i++ {
+		scanProjectDirectoriesFor(sd[i])
 	}
+	return projects
 }
 
 func scanProjectDirectoriesFor(rootDir string) {
@@ -29,9 +29,9 @@ func scanProjectDirectoriesFor(rootDir string) {
 			if projectHasWorktrees(worktrees, basePath) {
 				for _, w := range worktrees {
 					projectHasTmuxpFile := projectHasTmuxpFile(basePath + "/" + w.branch)
-					launchableDir := project{
+					launchableDir := Project{
 						basePath:      basePath,
-						fullPath:      basePath + "/" + w.branch,
+						FullPath:      basePath + "/" + w.branch,
 						isWorktree:    true,
 						branch:        w.branch,
 						supportsTmuxp: projectHasTmuxpFile,
@@ -40,9 +40,9 @@ func scanProjectDirectoriesFor(rootDir string) {
 				}
 			} else {
 				projectHasTmuxpFile := projectHasTmuxpFile(basePath)
-				launchableDir := project{
+				launchableDir := Project{
 					basePath:      basePath,
-					fullPath:      basePath,
+					FullPath:      basePath,
 					isWorktree:    false,
 					supportsTmuxp: projectHasTmuxpFile,
 				}

@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func GetSelectionFromUser(initialSearchTerm string) project {
+func GetSelectionFromUser(initialSearchTerm string) Project {
 	var input string
 	for _, choice := range projects {
 		input += choice.getFriendlyName() + "\n"
@@ -33,8 +33,8 @@ func GetSelectionFromUser(initialSearchTerm string) project {
 	return findProjectDirectoryByFriendlyName(selectedProjectName)
 }
 
-func findProjectDirectoryByFriendlyName(name string) project {
-	var matchingProjectDirectory project
+func findProjectDirectoryByFriendlyName(name string) Project {
+	var matchingProjectDirectory Project
 	for _, p := range projects {
 		if p.getFriendlyName() == name {
 			matchingProjectDirectory = p
