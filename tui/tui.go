@@ -40,11 +40,11 @@ var DefaultKeyMap = keyMap{
 		key.WithHelp("ctrl+c", "quit"),
 	),
 	Up: key.NewBinding(
-		key.WithKeys("ctrl+k", "up"),
+		key.WithKeys("ctrl+k", "up", "ctrl+p"),
 		key.WithHelp("ctrl+k", "up"),
 	),
 	Down: key.NewBinding(
-		key.WithKeys("ctrl+j", "down"),
+		key.WithKeys("ctrl+j", "down", "ctrl+n"),
 		key.WithHelp("ctrl+j", "down"),
 	),
 }
