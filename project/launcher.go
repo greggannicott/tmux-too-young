@@ -95,7 +95,6 @@ func attachToProjectFromOutsideOfTmux(p project) {
 func sessionIsUnderway(p project) bool {
 	sessionIsUserwayCmd := exec.Command("/bin/zsh", "-c", "tmux list-sessions | cut -d ':' -f 1 | grep '"+p.getSessionName()+"'")
 	output, _ := sessionIsUserwayCmd.Output()
-	fmt.Println("Output of session check:", string(output))
 	return string(output) != ""
 }
 
