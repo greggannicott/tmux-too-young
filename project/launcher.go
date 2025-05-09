@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"time"
 )
 
 func LaunchProject(selectedProject project) {
@@ -32,7 +33,23 @@ func launchProjectFromWithinTmux(p project) {
 	if err != nil {
 		fmt.Println("Error creating new tmux session:", err)
 	}
+	waitForSessionToBeReady(p)
 	attachToProjectFromWithinTmux(p)
+}
+
+func waitForSessionToBeReady(p project) {
+	maxTries := 5
+	for i := 0; i < maxTries; i++ {
+		if sessionIsUnderway(p) {
+			break
+		}
+		fmt.Printf("Attempted to open new session [%v] but it isn't ready yet...", p.getFriendlyName())
+		time.Sleep(500 * time.Millisecond)
+		if i == maxTries-1 {
+			fmt.Println("Giving up on opening new session.")
+			return
+		}
+	}
 }
 
 func launchProjectFromOutsideOfTmux(p project) {
@@ -78,6 +95,7 @@ func attachToProjectFromOutsideOfTmux(p project) {
 func sessionIsUnderway(p project) bool {
 	sessionIsUserwayCmd := exec.Command("/bin/zsh", "-c", "tmux list-sessions | cut -d ':' -f 1 | grep '"+p.getSessionName()+"'")
 	output, _ := sessionIsUserwayCmd.Output()
+	fmt.Println("Output of session check:", string(output))
 	return string(output) != ""
 }
 
